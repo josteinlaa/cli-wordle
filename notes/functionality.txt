@@ -1,0 +1,7 @@
+GameHandler
+	update
+	
+InputHandler
+	sanitize
+	validate
+	
