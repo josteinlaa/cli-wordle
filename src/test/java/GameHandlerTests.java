@@ -3,7 +3,7 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
-import no.jostein.GameHandler;
+import no.jostein.service.GameHandler;
 
 class GameHandlerTests {
 

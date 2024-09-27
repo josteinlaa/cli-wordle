@@ -1,12 +1,9 @@
-package no.jostein;
+package no.jostein.service;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Random;
+
+import no.jostein.data.IDictionary;
+import no.jostein.model.WordleGuess;
 
 
 public class GameHandler {
@@ -14,17 +11,16 @@ public class GameHandler {
     private static final int MAX_GUESS = 5;
     private static final int WORD_LENGTH = 5;
 
-    private HashSet<String> wordList;
-
     private String answer;
 
-    private WordleGuess[] history; 
+    private WordleGuess[] history;
+
+    private IDictionary dictionary;
 
 
-    public GameHandler() {
-        // TODO ikke her! singleton? i Game kanskje også answer of wordlist i constructor, en ny handler per nye game?
-        this.wordList = readWordsFromFile();
-        this.answer = selectRandomWord();
+    public GameHandler(IDictionary dictionary) {
+        this.dictionary = dictionary;
+        this.answer = dictionary.getRandomWord();
         this.history = new WordleGuess[MAX_GUESS];
 
     }
@@ -32,41 +28,7 @@ public class GameHandler {
     public GameHandler(String answer) {
         this.answer = answer;
     }
-    
-    
-    private HashSet<String> readWordsFromFile() {
-        HashSet<String> words = new HashSet<>();
-        BufferedReader reader;
 
-        String fs = File.separator;
-        
-        try {
-            reader = new BufferedReader(new FileReader("src" + fs + "main" + fs + "resources" + fs + "words" + fs + "words.txt"));
-            String line = reader.readLine();
-
-            while (line != null) {
-                //TODO not length 5 word, exeption handling
-                words.add(line);
-                line = reader.readLine();
-            }
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return words;
-    }
-
-    private String selectRandomWord() {
-        Random random = new Random();
-        int randIdx = random.nextInt(this.wordList.size());
-
-        return this.wordList.toArray()[randIdx].toString();
-    }
-
-    private boolean isValidWord(String word) {
-        return this.wordList.contains(word);
-    }
 
     public String getHint(String guess) {
         StringBuilder hintStr = new StringBuilder();

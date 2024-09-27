@@ -1,6 +1,9 @@
-package no.jostein;
+package no.jostein.game;
 
 import java.util.Scanner;
+
+import no.jostein.service.GameHandler;
+import no.jostein.ui.GameRenderer;
 
 public class Game {
     public void runGame() {
