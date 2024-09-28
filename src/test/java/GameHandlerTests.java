@@ -3,7 +3,7 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
-import no.jostein.service.GameHandler;
+import no.jostein.game.GameRound;
 
 class GameHandlerTests {
 
@@ -11,18 +11,18 @@ class GameHandlerTests {
     void getHint() {
 
         String answer = "water";
-        GameHandler gameHandler = new GameHandler(answer);
+        GameRound gameHandler = new GameRound(answer);
 
         assertEquals("nnggg", gameHandler.getHint("otter"));
 
 
         answer = "torta";
-        gameHandler = new GameHandler(answer);
+        gameHandler = new GameRound(answer);
 
         assertEquals("gygyy", gameHandler.getHint("tarot"));
 
         answer = "ttttt";
-        gameHandler = new GameHandler(answer);
+        gameHandler = new GameRound(answer);
 
         assertEquals("gnnng", gameHandler.getHint("tarot"));
     }

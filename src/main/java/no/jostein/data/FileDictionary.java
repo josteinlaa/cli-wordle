@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 public class FileDictionary implements IDictionary {
@@ -23,7 +24,8 @@ public class FileDictionary implements IDictionary {
 
     @Override
     public String getRandomWord() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Random random = new Random();
+        return words.toArray()[random.nextInt(words.size())].toString();
     }
 
     private Set<String> loadWordsFromFile() {

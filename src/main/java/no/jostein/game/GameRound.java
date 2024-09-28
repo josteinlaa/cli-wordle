@@ -1,31 +1,29 @@
-package no.jostein.service;
+package no.jostein.game;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import no.jostein.data.IDictionary;
 import no.jostein.model.WordleGuess;
 
 
-public class GameHandler {
-
-    private static final int MAX_GUESS = 5;
+public class GameRound {
+    private static final int MAX_GUESSES = 5; 
     private static final int WORD_LENGTH = 5;
 
-    private String answer;
-
-    private WordleGuess[] history;
-
+    private ArrayList<WordleGuess> guessHistory;
     private IDictionary dictionary;
+    private String answer;
+    private int guessesRemaining;
 
-
-    public GameHandler(IDictionary dictionary) {
+    public GameRound(IDictionary dictionary) {
         this.dictionary = dictionary;
         this.answer = dictionary.getRandomWord();
-        this.history = new WordleGuess[MAX_GUESS];
-
+        this.guessHistory = new ArrayList<>();
+        this.guessesRemaining = MAX_GUESSES;
     }
 
-    public GameHandler(String answer) {
+    public GameRound(String answer) {
         this.answer = answer;
     }
 
@@ -66,15 +64,32 @@ public class GameHandler {
         return hintStr.toString();
     }
 
-    public void makeGuess(String newGuess, int turn) {
-        //isValidWord(newGuess) &&
-        if ( turn < MAX_GUESS) {
-            this.history[turn] = new WordleGuess(newGuess, getHint(newGuess));
+    public void makeGuess(String guess) {
+        if (guessesRemaining <= 0) {
+            throw new IllegalStateException("No guesses remaining");
         }
+
+        if (guess.length() != WORD_LENGTH) {
+            throw new IllegalArgumentException("Guess must be " + WORD_LENGTH + " characters long");
+        }
+
+        /*if (!dictionary.isValidWord(guess)) {
+            throw new IllegalArgumentException("Invalid word");
+        }*/
+
+        guessHistory.add(new WordleGuess(guess, getHint(guess), guess.length()));
+        guessesRemaining--;
     }
 
-    public WordleGuess[] getHistory() {
-        return this.history;
+    public boolean isRoundOver() {
+        return guessesRemaining == 0 || guessHistory.stream().anyMatch(WordleGuess::getIsGuessCorrect);
     }
 
+    public int getGuessesRemaining() {
+        return guessesRemaining;
+    }
+
+    public ArrayList<WordleGuess> getGuessHistory() {
+        return this.guessHistory;
+    }
 }

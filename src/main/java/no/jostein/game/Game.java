@@ -1,32 +1,38 @@
 package no.jostein.game;
 
-import java.util.Scanner;
-
-import no.jostein.service.GameHandler;
-import no.jostein.ui.CLIUserInterface;
+import no.jostein.data.IDictionary;
 import no.jostein.ui.IUserInterface;
 
 public class Game {
-    private GameHandler gameHandler;
     private IUserInterface userInterface;
+    private final IDictionary dictionary;
+    private int totalRounds;
 
-    public Game(GameHandler gameHandler, IUserInterface userInterface) {
-        this.gameHandler = gameHandler;
+
+    public Game(IUserInterface userInterface, IDictionary dictionary) {
         this.userInterface = userInterface;
+        this.dictionary = dictionary;
+        this.totalRounds = 0;
     }
 
     public void runGame() {
-        CLIUserInterface gr = new CLIUserInterface();
-        String guess;
+        userInterface.displayInfo();
 
-        while (true) {
-            System.out.println("NEW GAME. Guess the word:");
-            for (int i = 0; i < 5; i++) {
-                guess = gr.getUserGuess();
-                gh.makeGuess(guess, i);
-                gr.clearTerminal();
-                gr.printTurn(gh.getHistory());
+        boolean playAgain = true;
+        while (playAgain) {
+            totalRounds++;
+            GameRound gameRound = new GameRound(dictionary);
+
+            // Play a single round
+            playRound(gameRound);
         }
-            }
+
+    }
+
+    private void playRound(GameRound gameRound) {
+        while (!gameRound.isRoundOver()) {
+            userInterface.displayGameState(gameRound.getGuessHistory());
+            gameRound.makeGuess(userInterface.getUserGuess());
+        }
     }
 }
