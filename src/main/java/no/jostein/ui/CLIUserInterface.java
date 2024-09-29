@@ -39,17 +39,18 @@ public class CLIUserInterface  implements IUserInterface {
     }
 
     @Override
-    public void displayInfo() {
+    public void displayMenu() {
+        clearTerminal();
         System.out.println("Welcome to Wordle!");
         System.out.println("Guess the 5-letter word in 5 attempts.");
         System.out.println("Hints: [Green color] = correct letter & position, [Yellow color] = correct letter, wrong position, [No color] = letter not in word.");
-        System.out.println("Good luck!\n");
+        System.out.println("Type 'y' to start. Good luck! Press ctrl-c at any time to exit game.\n");
     }
 
     @Override
     public void displayGameState(List<WordleGuess> guessHistory) {
-
-
+        clearTerminal();
+        System.out.println("Guess the word:");
         for (WordleGuess wg : guessHistory) {
             if (wg != null) {
                 for (int j = 0; j < wg.getWordLen(); j++) {
@@ -61,5 +62,15 @@ public class CLIUserInterface  implements IUserInterface {
                 System.out.flush(); 
             }
         }
+    }
+
+    @Override
+    public boolean getYesOrNo() {
+        return scanner.nextLine().equalsIgnoreCase("y");
+    }
+
+    @Override
+    public void displayMessage(String message) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

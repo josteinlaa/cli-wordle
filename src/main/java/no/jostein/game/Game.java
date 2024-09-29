@@ -2,31 +2,39 @@ package no.jostein.game;
 
 import no.jostein.data.IDictionary;
 import no.jostein.ui.IUserInterface;
+import no.jostein.util.GameState;
 
 public class Game {
     private IUserInterface userInterface;
     private final IDictionary dictionary;
-    private int totalRounds;
+    private GameState gameState;
 
 
     public Game(IUserInterface userInterface, IDictionary dictionary) {
         this.userInterface = userInterface;
         this.dictionary = dictionary;
-        this.totalRounds = 0;
+        this.gameState = GameState.MENU;
     }
 
     public void runGame() {
-        userInterface.displayInfo();
+        while (true) {
+            switch (this.gameState) {
+                case MENU:
+                    userInterface.displayMenu();
 
-        boolean playAgain = true;
-        while (playAgain) {
-            totalRounds++;
-            GameRound gameRound = new GameRound(dictionary);
-
-            // Play a single round
-            playRound(gameRound);
+                    boolean playAgain = userInterface.getYesOrNo();
+                    System.out.println("gmmm");
+                    if (playAgain) {
+                        this.gameState = GameState.PLAYING; 
+                    }
+                    break;
+                case PLAYING:
+                    playRound(new GameRound(dictionary.getRandomWord()));
+                    break;
+                case ROUND_OVER:
+                    break;
+            }
         }
-
     }
 
     private void playRound(GameRound gameRound) {

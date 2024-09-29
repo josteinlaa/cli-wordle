@@ -6,6 +6,8 @@ import no.jostein.model.WordleGuess;
 
 public interface IUserInterface {
     String getUserGuess();
-    void displayInfo();
+    void displayMenu();
     void displayGameState(List<WordleGuess> guessHistory);
+    boolean getYesOrNo();
+    void displayMessage(String message);
 }

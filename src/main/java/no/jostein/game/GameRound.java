@@ -3,7 +3,6 @@ package no.jostein.game;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import no.jostein.data.IDictionary;
 import no.jostein.model.WordleGuess;
 
 
@@ -12,20 +11,15 @@ public class GameRound {
     private static final int WORD_LENGTH = 5;
 
     private ArrayList<WordleGuess> guessHistory;
-    private IDictionary dictionary;
-    private String answer;
+    private final String answer;
     private int guessesRemaining;
 
-    public GameRound(IDictionary dictionary) {
-        this.dictionary = dictionary;
-        this.answer = dictionary.getRandomWord();
+    public GameRound(String answer) {
+        this.answer = answer;
         this.guessHistory = new ArrayList<>();
         this.guessesRemaining = MAX_GUESSES;
     }
 
-    public GameRound(String answer) {
-        this.answer = answer;
-    }
 
 
     public String getHint(String guess) {
@@ -72,10 +66,6 @@ public class GameRound {
         if (guess.length() != WORD_LENGTH) {
             throw new IllegalArgumentException("Guess must be " + WORD_LENGTH + " characters long");
         }
-
-        /*if (!dictionary.isValidWord(guess)) {
-            throw new IllegalArgumentException("Invalid word");
-        }*/
 
         guessHistory.add(new WordleGuess(guess, getHint(guess), guess.length()));
         guessesRemaining--;
