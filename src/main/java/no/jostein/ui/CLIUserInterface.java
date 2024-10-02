@@ -8,7 +8,7 @@ import no.jostein.util.ColorCode;
 
 
 
-public class CLIUserInterface  implements IUserInterface {
+public class CLIUserInterface implements IUserInterface {
 
     private Scanner scanner = new Scanner(System.in);
 
@@ -44,7 +44,7 @@ public class CLIUserInterface  implements IUserInterface {
         System.out.println("Welcome to Wordle!");
         System.out.println("Guess the 5-letter word in 5 attempts.");
         System.out.println("Hints: [Green color] = correct letter & position, [Yellow color] = correct letter, wrong position, [No color] = letter not in word.");
-        System.out.println("Type 'y' to start. Good luck! Press ctrl-c at any time to exit game.\n");
+        System.out.println("Press ctrl-c at any time to exit game. Would you like to start? Type 'y'.\n");
     }
 
     @Override
@@ -71,6 +71,6 @@ public class CLIUserInterface  implements IUserInterface {
 
     @Override
     public void displayMessage(String message) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        System.out.println(message);
     }
 }

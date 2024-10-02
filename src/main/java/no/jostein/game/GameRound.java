@@ -42,7 +42,7 @@ public class GameRound {
                 charCount.put(guessChar, charCount.get(guessChar) - 1);
             } 
             else {
-                hintStr.append("n"); // placeholder
+                hintStr.append("n"); // char not in word or placeholder
             }
         }
         
@@ -58,10 +58,7 @@ public class GameRound {
         return hintStr.toString();
     }
 
-    public void makeGuess(String guess) {
-        if (guessesRemaining <= 0) {
-            throw new IllegalStateException("No guesses remaining");
-        }
+    public void makeGuess(String guess) throws IllegalArgumentException { 
 
         if (guess.length() != WORD_LENGTH) {
             throw new IllegalArgumentException("Guess must be " + WORD_LENGTH + " characters long");

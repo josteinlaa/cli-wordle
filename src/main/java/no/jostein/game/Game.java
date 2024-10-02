@@ -21,17 +21,27 @@ public class Game {
             switch (this.gameState) {
                 case MENU:
                     userInterface.displayMenu();
+                    boolean startPlay = userInterface.getYesOrNo();
 
-                    boolean playAgain = userInterface.getYesOrNo();
-                    System.out.println("gmmm");
-                    if (playAgain) {
+                    if (startPlay) {
                         this.gameState = GameState.PLAYING; 
                     }
+
                     break;
                 case PLAYING:
                     playRound(new GameRound(dictionary.getRandomWord()));
+                    this.gameState = GameState.ROUND_OVER;
                     break;
                 case ROUND_OVER:
+                    userInterface.displayMessage("Play again? Type 'y'.");
+                    boolean playAgain = userInterface.getYesOrNo();
+
+                    if (!playAgain) {
+                        this.gameState = GameState.MENU;
+                    } else {
+                        this.gameState = GameState.PLAYING;
+                    }
+                    
                     break;
             }
         }
@@ -40,7 +50,18 @@ public class Game {
     private void playRound(GameRound gameRound) {
         while (!gameRound.isRoundOver()) {
             userInterface.displayGameState(gameRound.getGuessHistory());
-            gameRound.makeGuess(userInterface.getUserGuess());
+            try {
+                gameRound.makeGuess(userInterface.getUserGuess());
+            } catch (Exception e) {
+                userInterface.displayMessage(e.getMessage() + " Press Enter to continue...");
+                userInterface.getYesOrNo();
+            }
+        }
+
+        if (gameRound.getGuessesRemaining() > 0) {
+            userInterface.displayMessage("You WON!");
+        } else {
+            userInterface.displayMessage("You LOST!");
         }
     }
 }

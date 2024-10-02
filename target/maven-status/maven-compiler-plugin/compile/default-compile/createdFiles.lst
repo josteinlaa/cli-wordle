@@ -1,0 +1,11 @@
+no/jostein/game/Game$1.class
+no/jostein/ui/IUserInterface.class
+no/jostein/data/FileDictionary.class
+no/jostein/game/Game.class
+no/jostein/game/GameRound.class
+no/jostein/data/IDictionary.class
+no/jostein/model/WordleGuess.class
+no/jostein/Main.class
+no/jostein/ui/CLIUserInterface.class
+no/jostein/util/GameState.class
+no/jostein/util/ColorCode.class

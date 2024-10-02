@@ -1,6 +1,10 @@
-c:\Users\Joste\projects\cli-wordle\src\main\java\no\jostein\Game.java
-c:\Users\Joste\projects\cli-wordle\src\main\java\no\jostein\GameHandler.java
-c:\Users\Joste\projects\cli-wordle\src\main\java\no\jostein\GameRenderer.java
-c:\Users\Joste\projects\cli-wordle\src\main\java\no\jostein\InputHandler.java
-c:\Users\Joste\projects\cli-wordle\src\main\java\no\jostein\Main.java
-c:\Users\Joste\projects\cli-wordle\src\main\java\no\jostein\WordleGuess.java
+/Users/josteinlind/projects/java/cli-wordle/src/main/java/no/jostein/Main.java
+/Users/josteinlind/projects/java/cli-wordle/src/main/java/no/jostein/data/FileDictionary.java
+/Users/josteinlind/projects/java/cli-wordle/src/main/java/no/jostein/data/IDictionary.java
+/Users/josteinlind/projects/java/cli-wordle/src/main/java/no/jostein/game/Game.java
+/Users/josteinlind/projects/java/cli-wordle/src/main/java/no/jostein/game/GameRound.java
+/Users/josteinlind/projects/java/cli-wordle/src/main/java/no/jostein/model/WordleGuess.java
+/Users/josteinlind/projects/java/cli-wordle/src/main/java/no/jostein/ui/CLIUserInterface.java
+/Users/josteinlind/projects/java/cli-wordle/src/main/java/no/jostein/ui/IUserInterface.java
+/Users/josteinlind/projects/java/cli-wordle/src/main/java/no/jostein/util/ColorCode.java
+/Users/josteinlind/projects/java/cli-wordle/src/main/java/no/jostein/util/GameState.java
