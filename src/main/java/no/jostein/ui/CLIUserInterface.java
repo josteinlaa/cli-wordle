@@ -12,7 +12,7 @@ public class CLIUserInterface implements IUserInterface {
 
     private Scanner scanner = new Scanner(System.in);
 
-    private ColorCode getColorCode(Character c) {
+    private ColorCode charToColorCode(Character c) {
         switch (c) {
             case 'g':
                 return ColorCode.GREEN;
@@ -51,12 +51,15 @@ public class CLIUserInterface implements IUserInterface {
     public void displayGameState(List<WordleGuess> guessHistory) {
         clearTerminal();
         System.out.println("Guess the word:");
+
         for (WordleGuess wg : guessHistory) {
+            
             if (wg != null) {
                 for (int j = 0; j < wg.getWordLen(); j++) {
-                    System.out.print(getColorCode(wg.getHint().charAt(j)));
+                    System.out.print(charToColorCode(wg.getHint().charAt(j)));
                     System.out.print((Character) wg.getGuess().charAt(j));
                 }
+                
                 System.out.print("\n");
                 System.out.print(ColorCode.RESET);
                 System.out.flush(); 
