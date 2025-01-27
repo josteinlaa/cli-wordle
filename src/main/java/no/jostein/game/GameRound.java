@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import no.jostein.model.WordleGuess;
+import no.jostein.util.LetterState;
 
 
 public class GameRound {
@@ -20,42 +21,56 @@ public class GameRound {
         this.guessesRemaining = MAX_GUESSES;
     }
 
+    private HashMap<Character, Integer> getCharFrequencies(String s) {
+        HashMap<Character, Integer> answerCharFreqencies = new HashMap<>();
 
+        for (char c : s.toCharArray()) {
+            answerCharFreqencies.put(c, answerCharFreqencies.getOrDefault(c, 0) + 1);
+        }
 
-    public String getHint(String guess) {
-        StringBuilder hintStr = new StringBuilder();
-        HashMap<Character, Integer> charCount = new HashMap<>();
+        return answerCharFreqencies;
+    }
+
+    private void decreaseCharFrequency(HashMap<Character, Integer> answerCharFreqencies, char c) {
+        answerCharFreqencies.put(c, answerCharFreqencies.get(c) - 1);
+    }
+
+    private boolean charSomewhereInAnswer(char guessChar, HashMap<Character, Integer> answerCharFreqencies) {
+        return answerCharFreqencies.getOrDefault(guessChar, 0) > 0;
+    }
+
+    public LetterState[] getHint(String guess) {
+        LetterState[] hint = new LetterState[WORD_LENGTH];
+
+        HashMap<Character, Integer> answerCharFreqencies = getCharFrequencies(answer);
 
         char guessChar;
         char answerChar;
-
-        for (char c : answer.toCharArray()) {
-            charCount.put(c, charCount.getOrDefault(c, 0) + 1);
-        }
 
         for (int i = 0; i < WORD_LENGTH; i++) {
             guessChar = guess.charAt(i);
             answerChar = this.answer.charAt(i);
 
             if (guessChar == answerChar) {
-                hintStr.append("g"); // Correct character in the correct position
-                charCount.put(guessChar, charCount.get(guessChar) - 1);
+                hint[i] = LetterState.CORRECT_LETTER; // Correct character in the correct position
+                decreaseCharFrequency(answerCharFreqencies, guessChar);
             } 
             else {
-                hintStr.append("n"); // char not in word or placeholder
+                hint[i] = LetterState.NOT_IN_ANSWER; // char not in word (could be placeholder)
             }
         }
         
         for (int i = 0; i < WORD_LENGTH; i++) {
             guessChar = guess.charAt(i);
             
-            if (hintStr.charAt(i) != 'g' && charCount.getOrDefault(guessChar, 0) > 0) {
-                hintStr.setCharAt(i, 'y'); // Correct character, wrong position
-                charCount.put(guessChar, charCount.get(guessChar) - 1); // Decrement frequency for wrong-position match
+            if (hint[i] != LetterState.CORRECT_LETTER && charSomewhereInAnswer(guessChar, answerCharFreqencies)) {
+                
+                hint[i] = LetterState.IN_ANSWER_WRONG_POSITION; // Correct character, wrong position
+                decreaseCharFrequency(answerCharFreqencies, guessChar); // Decrement frequency for wrong-position match
             }
         }
 
-        return hintStr.toString();
+        return hint;
     }
 
     public void makeGuess(String guess) throws IllegalArgumentException { 
@@ -78,5 +93,9 @@ public class GameRound {
 
     public ArrayList<WordleGuess> getGuessHistory() {
         return this.guessHistory;
+    }
+
+    public String getAnswer() {
+        return this.answer;
     }
 }

@@ -1,7 +1,9 @@
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import no.jostein.game.GameRound;
+import no.jostein.util.LetterState;
 
 class GameRoundTests {
 
@@ -16,32 +18,66 @@ class GameRoundTests {
     @Test
     void testAllCorrect() {
         gameHandler = new GameRound("apple");
-        assertEquals("ggggg", gameHandler.getHint("apple"));
+        LetterState[] expected = new LetterState[] {
+            LetterState.CORRECT_LETTER, 
+            LetterState.CORRECT_LETTER, 
+            LetterState.CORRECT_LETTER, 
+            LetterState.CORRECT_LETTER, 
+            LetterState.CORRECT_LETTER
+        };
+        assertArrayEquals(expected, gameHandler.getHint("apple"));
     }
 
     @Test
     void testNoMatches() {
         gameHandler = new GameRound("water");
-        assertEquals("nnnnn", gameHandler.getHint("polis"));
+        LetterState[] expected = new LetterState[] {
+            LetterState.NOT_IN_ANSWER, 
+            LetterState.NOT_IN_ANSWER, 
+            LetterState.NOT_IN_ANSWER, 
+            LetterState.NOT_IN_ANSWER, 
+            LetterState.NOT_IN_ANSWER
+        };
+        assertArrayEquals(expected, gameHandler.getHint("polis"));
     }
 
     @Test
     void testCorrectAndWrongPositions() {
         gameHandler = new GameRound("crate");
-        assertEquals("yggyg", gameHandler.getHint("trace"));
+        LetterState[] expected = new LetterState[] {
+            LetterState.IN_ANSWER_WRONG_POSITION, 
+            LetterState.CORRECT_LETTER, 
+            LetterState.CORRECT_LETTER, 
+            LetterState.IN_ANSWER_WRONG_POSITION, 
+            LetterState.CORRECT_LETTER
+        };
+        assertArrayEquals(expected, gameHandler.getHint("trace"));
     }
 
     @Test
     void testRepeatedLettersInGuess() {
         gameHandler = new GameRound("apple");
-        assertEquals("nggny", gameHandler.getHint("ppppl"));
+        LetterState[] expected = new LetterState[] {
+            LetterState.NOT_IN_ANSWER, 
+            LetterState.CORRECT_LETTER, 
+            LetterState.CORRECT_LETTER, 
+            LetterState.NOT_IN_ANSWER, 
+            LetterState.IN_ANSWER_WRONG_POSITION
+        };
+        assertArrayEquals(expected, gameHandler.getHint("ppppl"));
     }
 
     @Test
     void testGuessWithRepeatedLettersInAnswer() {
         gameHandler = new GameRound("ttttt");
-        assertEquals("gnnng", gameHandler.getHint("tarot"));
+        LetterState[] expected = new LetterState[] {
+            LetterState.CORRECT_LETTER, 
+            LetterState.NOT_IN_ANSWER, 
+            LetterState.NOT_IN_ANSWER, 
+            LetterState.NOT_IN_ANSWER, 
+            LetterState.CORRECT_LETTER
+        };
+        assertArrayEquals(expected, gameHandler.getHint("tarot"));
     }
-
 }
 

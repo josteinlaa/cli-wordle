@@ -5,10 +5,9 @@ import no.jostein.ui.IUserInterface;
 import no.jostein.util.GameState;
 
 public class Game {
-    private IUserInterface userInterface;
+    private final IUserInterface userInterface;
     private final IDictionary dictionary;
     private GameState gameState;
-
 
     public Game(IUserInterface userInterface, IDictionary dictionary) {
         this.userInterface = userInterface;
@@ -19,49 +18,54 @@ public class Game {
     public void runGame() {
         while (true) {
             switch (this.gameState) {
-                case MENU:
-                    userInterface.displayMenu();
-                    boolean startPlay = userInterface.getYesOrNo();
-
-                    if (startPlay) {
-                        this.gameState = GameState.PLAYING; 
-                    }
-
-                    break;
-                case PLAYING:
-                    playRound(new GameRound(dictionary.getRandomWord()));
-                    this.gameState = GameState.ROUND_OVER;
-                    break;
-                case ROUND_OVER:
-                    userInterface.displayMessage("Play again? Type 'y'.");
-                    boolean playAgain = userInterface.getYesOrNo();
-
-                    if (!playAgain) {
-                        this.gameState = GameState.MENU;
-                    } else {
-                        this.gameState = GameState.PLAYING;
-                    }
-                    
-                    break;
+                case MENU -> handleMenu();
+                case PLAYING -> handlePlaying();
+                case ROUND_OVER -> handleRoundOver();
             }
+        }
+    }
+
+    private void handleMenu() {
+        userInterface.displayMenu();
+        boolean startPlay = userInterface.getYesOrNo();
+
+        if (startPlay) {
+            this.gameState = GameState.PLAYING; 
+        }
+    }
+
+    private void handlePlaying() {
+        playRound(new GameRound(dictionary.getRandomWord()));
+        this.gameState = GameState.ROUND_OVER;
+    }
+
+    private void handleRoundOver() {
+        userInterface.promptPlayAgain();
+        boolean playAgain = userInterface.getYesOrNo();
+
+        if (!playAgain) {
+            this.gameState = GameState.MENU;
+        } else {
+            this.gameState = GameState.PLAYING;
         }
     }
 
     private void playRound(GameRound gameRound) {
         while (!gameRound.isRoundOver()) {
-            userInterface.displayGameState(gameRound.getGuessHistory());
+                userInterface.displayGameState(gameRound.getGuessHistory());
+
             try {
+                
                 gameRound.makeGuess(userInterface.getUserGuess());
-            } catch (Exception e) {
+            } catch (IllegalArgumentException e) {
                 userInterface.displayMessage(e.getMessage() + " Press Enter to continue...");
                 userInterface.getYesOrNo();
             }
         }
 
-        if (gameRound.getGuessesRemaining() > 0) {
-            userInterface.displayMessage("You WON!");
-        } else {
-            userInterface.displayMessage("You LOST!");
-        }
+        userInterface.displayRoundOver(
+                    gameRound.getGuessHistory()
+                    .get(gameRound.getGuessHistory().size() - 1)
+                    .getIsGuessCorrect(), gameRound);
     }
 }

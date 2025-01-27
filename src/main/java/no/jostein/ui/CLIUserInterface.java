@@ -3,29 +3,49 @@ package no.jostein.ui;
 import java.util.List;
 import java.util.Scanner;
 
+import no.jostein.game.GameRound;
 import no.jostein.model.WordleGuess;
 import no.jostein.util.ColorCode;
-
-
+import no.jostein.util.LetterState;
 
 public class CLIUserInterface implements IUserInterface {
 
-    private Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
 
-    private ColorCode charToColorCode(Character c) {
-        switch (c) {
-            case 'g':
-                return ColorCode.GREEN;
-            case 'y':
-                return ColorCode.YELLOW;
-            default:
-                return ColorCode.RESET;
-        }
+
+    // Runtime shutdown hook, to gracefully close the scanner
+    public CLIUserInterface() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            if (scanner != null) {
+                scanner.close();
+            }
+        }));
     }
 
-    public void printTurn(WordleGuess[] history){
-        
-       
+    private ColorCode LetterStateTColorCode(LetterState ls) {
+        return switch (ls) {
+            case CORRECT_LETTER -> ColorCode.GREEN;
+            case IN_ANSWER_WRONG_POSITION -> ColorCode.YELLOW;
+            default -> ColorCode.RESET;
+        };
+    }
+
+    private void changeColorCodePrintChar(LetterState ls, char c) {
+        System.out.print(LetterStateTColorCode(ls));
+        System.out.print(c);
+        System.out.print(ColorCode.RESET);
+    }
+
+    private void printHistoryWithHint(List<WordleGuess> guessHistory){
+        for (WordleGuess wg : guessHistory) {
+            if (wg != null) {
+                for (int j = 0; j < wg.getWordLen(); j++) {
+                    changeColorCodePrintChar(wg.getHint()[j], wg.getGuess().charAt(j));
+                }
+                System.out.print("\n");
+                System.out.flush(); 
+            }
+        }
     }
 
     private void clearTerminal() {
@@ -35,7 +55,12 @@ public class CLIUserInterface implements IUserInterface {
 
     @Override
     public String getUserGuess() {
-        return scanner.nextLine().trim();
+        try {
+            return scanner.nextLine().trim();
+        } catch (Exception e) {
+            return "";
+        }
+        
     }
 
     @Override
@@ -50,30 +75,35 @@ public class CLIUserInterface implements IUserInterface {
     @Override
     public void displayGameState(List<WordleGuess> guessHistory) {
         clearTerminal();
-        System.out.println("Guess the word:");
-
-        for (WordleGuess wg : guessHistory) {
-            
-            if (wg != null) {
-                for (int j = 0; j < wg.getWordLen(); j++) {
-                    System.out.print(charToColorCode(wg.getHint().charAt(j)));
-                    System.out.print((Character) wg.getGuess().charAt(j));
-                }
-                
-                System.out.print("\n");
-                System.out.print(ColorCode.RESET);
-                System.out.flush(); 
-            }
-        }
+        displayMessage("Guess the word:");
+        printHistoryWithHint(guessHistory);
     }
 
     @Override
     public boolean getYesOrNo() {
-        return scanner.nextLine().equalsIgnoreCase("y");
+        try {
+            return scanner.nextLine().equalsIgnoreCase("y");
+        } catch (Exception e) {
+           return false;
+        }
     }
 
     @Override
     public void displayMessage(String message) {
         System.out.println(message);
+    }
+
+    @Override
+    public void promptPlayAgain() {
+        System.out.println("Play again? Type 'y'.");
+    }
+
+    @Override
+    public void displayRoundOver(boolean isWon, GameRound gameRound) {
+        if (isWon) {
+            System.out.println("Congratulations! You won!");
+        } else {
+            System.out.println("You lost! The word was: " + gameRound.getAnswer());
+        }
     }
 }

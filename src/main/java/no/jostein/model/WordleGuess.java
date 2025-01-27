@@ -1,24 +1,26 @@
 package no.jostein.model;
 
+import no.jostein.util.LetterState;
+
 public class WordleGuess {
-    private String guess;
-    private String hint;
-    private int wordLen;
-    private boolean isGuessCorrect;
+    private final String guess;
+    private final LetterState[] hint;
+    private final int wordLen;
+    private final boolean isGuessCorrect;
 
     
-    public WordleGuess(String guess, String hint, int wordLen) {
+    public WordleGuess(String guess, LetterState[] hint, int wordLen) {
         this.guess = guess;
         this.hint = hint;
         this.wordLen = wordLen;
-        this.isGuessCorrect = hint.chars().allMatch(c -> c == 'g');
+        this.isGuessCorrect = java.util.Arrays.stream(hint).allMatch(letterState -> letterState == LetterState.CORRECT_LETTER);
     }
 
     public String getGuess() {
         return guess;
     }
 
-    public String getHint() {
+    public LetterState[] getHint() {
         return hint;
     }
     

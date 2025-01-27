@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class FileDictionary implements IDictionary {
 
-    private Set<String> words;
+    private final Set<String> words;
 
     public FileDictionary() {
         this.words = loadWordsFromFile();  // Load words on initialization
